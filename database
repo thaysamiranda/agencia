@@ -1,0 +1,359 @@
+
+CREATE TABLE cidade(
+	id SERIAL NOT NULL,
+	descricao VARCHAR(255) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE banco(
+	id SERIAL NOT NULL,
+	nome VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE agencia(
+	id SERIAL NOT NULL,
+	numero VARCHAR(255) NOT NULL,
+	id_endereco INTEGER NOT NULL,
+	id_banco INTEGER NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE conta(
+	id SERIAL NOT NULL,
+	id_banco INTEGER NOT NULL,
+	id_agencia INTEGER NOT NULL,
+	numero VARCHAR(30) NOT NULL,
+	digito VARCHAR (1) NOT NULL,
+	tipo VARCHAR (40) NOT NULL,
+	id_cliente INTEGER NOT NULL,
+	PRIMARY KEY (id)
+	
+);
+
+CREATE TABLE endereco(
+	id SERIAL NOT NULL,
+	logradouro VARCHAR(255) NOT NULL,
+	numero VARCHAR(15) NOT NULL,
+	complemento VARCHAR(255),
+	id_cidade INTEGER NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE cliente(
+	id SERIAL NOT NULL,
+	nome VARCHAR(255) NOT NULL,
+	cpf CHARACTER(11),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE transacoes(
+	id SERIAL NOT NULL,
+	dia_horario TIMESTAMP NOT NULL,
+	tipo VARCHAR(80),
+	valor NUMERIC(12,6),
+	id_conta INTEGER NOT NULL,
+	operacao_origem INTEGER,
+	PRIMARY KEY (id)
+);
+
+ALTER TABLE agencia
+	ADD CONSTRAINT fk_banco
+	FOREIGN KEY(id_banco) REFERENCES banco(id);
+	
+ALTER TABLE agencia
+	ADD CONSTRAINT fk_endereco
+	FOREIGN KEY(id_endereco) REFERENCES endereco(id);
+		
+ALTER TABLE conta
+	ADD CONSTRAINT fk_agencia
+	FOREIGN KEY(id_agencia) REFERENCES agencia(id);
+	
+ALTER TABLE endereco
+	ADD CONSTRAINT fk_cidade
+	FOREIGN KEY(id_cidade) REFERENCES cidade(id);
+	
+ALTER TABLE conta
+	ADD CONSTRAINT fk_cliente
+	FOREIGN KEY(id_cliente) REFERENCES cliente(id);
+	
+ALTER TABLE transacoes
+	ADD CONSTRAINT fk_conta
+	FOREIGN KEY(id_conta) REFERENCES conta(id);
+  
+  -------------- DML -------------
+  
+  BEGIN TRANSACTION;
+INSERT INTO banco (nome) VALUES('Banco do Brasil - Investimentos');
+INSERT INTO banco (nome) VALUES('Banco do Brasil - Pessoa Física');
+COMMIT TRANSACTION;
+
+BEGIN TRANSACTION;
+INSERT INTO cidade (descricao) VALUES('São Paulo');
+INSERT INTO cidade (descricao) VALUES('Campinas');
+INSERT INTO cidade (descricao) VALUES('Santos');
+COMMIT TRANSACTION;
+
+BEGIN TRANSACTION;
+INSERT INTO endereco (logradouro, numero, complemento, id_cidade) VALUES('Avenida Liberdade', '80', 'Bloco A', 1);
+INSERT INTO endereco (logradouro, numero, complemento, id_cidade) VALUES('Avenida Paulista', '300', null, 1);
+INSERT INTO endereco (logradouro, numero, complemento, id_cidade) VALUES('Avenida Beira-Mar', '4250', null, 3);
+INSERT INTO endereco (logradouro, numero, complemento, id_cidade) VALUES('Alameda Lorena', '510', null, 1);
+INSERT INTO endereco (logradouro, numero, complemento, id_cidade) VALUES('Rua Barão Geraldo', '3', null, 2);
+COMMIT TRANSACTION;
+
+
+BEGIN TRANSACTION;
+INSERT INTO agencia (id_banco, numero, id_endereco, nome) VALUES(1,'5678', 2, 'Liberdade');
+INSERT INTO agencia (id_banco, numero, id_endereco, nome) VALUES(1,'1234', 1, 'Paulista');
+INSERT INTO agencia (id_banco, numero, id_endereco, nome) VALUES(1,'4321', 3, 'Beira-Mar');
+INSERT INTO agencia (id_banco, numero, id_endereco, nome) VALUES(2,'12345', 4, 'Lorena');
+INSERT INTO agencia (id_banco, numero, id_endereco, nome) VALUES(2,'67890', 5, 'Barão Geraldo');
+COMMIT TRANSACTION;
+
+BEGIN TRANSACTION;
+INSERT INTO cliente (nome, cpf) VALUES ('Alexandre Zamora Zerbini Denigres', '00000000000');
+INSERT INTO cliente (nome, cpf) VALUES ('Andressa Raffler', '00000000001');
+INSERT INTO cliente (nome, cpf) VALUES ('Cinthia Yoshie Udakiri', '00000000002');
+INSERT INTO cliente (nome, cpf) VALUES ('Daniel Dos Anjos', '00000000003');
+INSERT INTO cliente (nome, cpf) VALUES ('Éder Ariã Basso Corrêa Filho', '00000000004');
+INSERT INTO cliente (nome, cpf) VALUES ('Erika Rosany de Almeida Lima', '00000000005');
+INSERT INTO cliente (nome, cpf) VALUES ('Felipe cesar de melo', '00000000006');
+INSERT INTO cliente (nome, cpf) VALUES ('Gabriel Arabi da Costa', '00000000007');
+INSERT INTO cliente (nome, cpf) VALUES ('Gabriela Siqueira do Vale Coelho', '00000000008');
+INSERT INTO cliente (nome, cpf) VALUES ('Gustavo Lima Olmos Ferraz', '00000000009');
+INSERT INTO cliente (nome, cpf) VALUES ('Gustavo Oliveira da Silva', '00000000010');
+INSERT INTO cliente (nome, cpf) VALUES ('Gustavo Silva Santos', '00000000011');
+INSERT INTO cliente (nome, cpf) VALUES ('Isabella Rodrigues de Souza Barra', '00000000012');
+INSERT INTO cliente (nome, cpf) VALUES ('Jhonatas Antonelli', '00000000013'); 
+INSERT INTO cliente (nome, cpf) VALUES ('João Filippe Rossi Rodrigues', '00000000014'); 
+INSERT INTO cliente (nome, cpf) VALUES ('João Pedro De Faria Oliveira', '00000000015'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Joel Pedro Bellatto', '00000000016'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Kaique da Silva Santos', '00000000017'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Larissa da Cruz Chiquito Ortega', '00000000018'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Louise Akemi Kuana', '00000000019'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Lucas Minici Dumont Prado', '00000000020'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Mariana Rosa de Oliveira', '00000000021'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Marthina Oliveira de Castro', '00000000022'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Nicolau Freire Romanos', '00000000023'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Rafael José Poletto Furlan', '00000000024'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Raphael Fagundes Moura', '00000000025'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Suelen Mirota da Silva', '00000000026'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Thaysa Alexandrino Miranda', '00000000027'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Thomas Caron de Castro Deus', '00000000028'); 
+INSERT INTO cliente (nome, cpf) VALUES ('Vítor Lima Delgado', '00000000029');
+COMMIT TRANSACTION;
+
+BEGIN TRANSACTION;
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '1234', '5', 'Conta Corrente',1);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '1233', '6', 'Conta Corrente',2);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '0324', '7', 'Poupança',3);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '4321', '0', 'Conta Corrente',4);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '7845', '6', 'Poupança',5);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '5687', '9', 'Conta Corrente',6);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '4563', 'X', 'Conta Corrente',7);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '5632', '1', 'Poupança',8);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '7812', 'X', 'Poupança',9);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '0123', '4', 'Poupança',10);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '2258', '9', 'Conta Corrente',11);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '1111', 'X', 'Conta Corrente',12);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '2222', '0', 'Conta Corrente',13);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '3333', '3', 'Poupança',14);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '4444', '9', 'Poupança',15);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '5555', '8', 'Conta Corrente',16);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '6666', '1', 'Poupança',17);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '7777', '2', 'Conta Corrente',18);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '8888', 'X', 'Conta Corrente',19);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '9999', '0', 'Poupança',20);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '9756', '3', 'Conta Corrente',21);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '1122', '2', 'Poupança',22);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '2266', '6', 'Poupança',23);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '3388', '9', 'Conta Corrente',24);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '7722', '5', 'Poupança',25);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '7878', 'X', 'Poupança',26);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '1212', '0', 'Poupança',27);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '2323', '7', 'Conta Corrente',28);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '7575', '7', 'Conta Corrente',29);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '6363', '8', 'Poupança',30);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '5656', '3', 'Conta Corrente',1);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '0101', '4', 'Poupança',2);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '4949', '6', 'Conta Corrente',3);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '3838', '0', 'Conta Corrente',4);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '3936', 'X', 'Poupança',5);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '1256', 'X', 'Conta Corrente',6);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,1, '1243', '3', 'Poupança',7);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '5456', '3', 'Poupança',8);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '7475', '9', 'Conta Corrente',9);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '0368', '1', 'Conta Corrente',10);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '0781', '1', 'Conta Corrente',11);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '1562', '6', 'Poupança',12);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,3, '1897', 'X', 'Poupança',13);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '2569', '2', 'Conta Corrente',14);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '4562', '3', 'Conta Corrente',15);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,4, '8782', '7', 'Poupança',16);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '8862', '8', 'Conta Corrente',17);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '1145', '0', 'Poupança',18);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(2,5, '2234', '0', 'Conta Corrente',19);
+INSERT INTO conta (id_banco, id_agencia, numero, digito, tipo, id_cliente) VALUES(1,2, '3334', '2', 'Poupança',20);
+COMMIT TRANSACTION;
+
+-- TRANSACOES - DEPOSITOS;
+BEGIN TRANSACTION;
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-25 13:43:34', 'Depósito', '1163.44', 9);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-30 00:00:03', 'Depósito', '1369.55', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-11 07:08:25', 'Depósito', '1607.88', 32);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-25 07:34:07', 'Depósito', '95.18', 44);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-03 15:12:59', 'Depósito', '125.63', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-01 05:04:32', 'Depósito', '396.42', 38);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-27 19:03:48', 'Depósito', '788.84', 26);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-16 03:31:55', 'Depósito', '113.95', 7);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-24 20:13:39', 'Depósito', '80.72', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-08 07:13:45', 'Depósito', '1791.27', 28);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-21 21:11:14', 'Depósito', '1181.50', 24);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-19 21:53:00', 'Depósito', '1089.18', 41);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-25 21:34:16', 'Depósito', '1976.08', 43);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-09 10:29:16', 'Depósito', '308.90', 42);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-18 19:05:58', 'Depósito', '1683.29', 48);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-10 00:29:50', 'Depósito', '848.52', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-21 22:00:18', 'Depósito', '1215.49', 28);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-13 21:42:24', 'Depósito', '1268.87', 38);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-24 17:59:11', 'Depósito', '1730.35', 30);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-27 05:55:27', 'Depósito', '97.89', 20);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-05 15:20:23', 'Depósito', '388.31', 7);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-05 04:27:47', 'Depósito', '1644.35', 10);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-27 08:12:08', 'Depósito', '1784.41', 11);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-30 23:01:48', 'Depósito', '1569.53', 6);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-31 02:38:03', 'Depósito', '344.63', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-09 14:46:58', 'Depósito', '394.21', 41);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-27 17:00:10', 'Depósito', '1626.69', 42);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-22 15:12:27', 'Depósito', '1432.16', 34);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-12 19:06:44', 'Depósito', '841.10', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-29 09:53:58', 'Depósito', '449.40', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-30 02:06:07', 'Depósito', '1886.72', 9);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-27 07:50:31', 'Depósito', '410.78', 32);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-06 05:37:01', 'Depósito', '1959.46', 36);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-09 14:27:08', 'Depósito', '1083.70', 44);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-01 04:17:34', 'Depósito', '521.07', 48);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-29 04:11:16', 'Depósito', '1539.12', 8);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-12 18:13:18', 'Depósito', '411.34', 18);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-19 08:12:15', 'Depósito', '1503.33', 3);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-25 10:56:49', 'Depósito', '1160.31', 21);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-17 21:43:17', 'Depósito', '613.62', 37);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-20 17:03:25', 'Depósito', '1267.67', 32);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-21 00:52:41', 'Depósito', '1937.46', 5);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-18 22:49:04', 'Depósito', '1146.04', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-03 05:43:52', 'Depósito', '1876.05', 45);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-31 06:13:32', 'Depósito', '1078.58', 17);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-24 06:30:24', 'Depósito', '49.62', 29);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-02 23:51:13', 'Depósito', '1532.13', 13);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-21 17:36:23', 'Depósito', '480.95', 9);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-14 11:34:35', 'Depósito', '529.80', 14);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-04 21:49:03', 'Depósito', '1363.73', 5);
+COMMIT TRANSACTION;
+
+-- TRANSACOES - SAQUES;
+BEGIN TRANSACTION;
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-06 01:55:59', 'Saque', '-401.21', 41);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-08 07:17:11', 'Saque', '-1305.39', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-15 19:50:03', 'Saque', '-1566.50', 36);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-14 19:19:05', 'Saque', '-1837.72', 47);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-18 12:27:54', 'Saque', '-1375.83', 3);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-14 22:02:16', 'Saque', '-1021.84', 18);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-04 10:28:46', 'Saque', '-60.46', 22);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-20 12:59:54', 'Saque', '-85.41', 27);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-21 01:59:48', 'Saque', '-77.36', 37);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-12 09:57:12', 'Saque', '-885.32', 22);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-08 10:43:21', 'Saque', '-1430.20', 43);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-11 10:51:01', 'Saque', '-780.62', 37);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-14 04:32:41', 'Saque', '-795.17', 23);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-08 16:10:38', 'Saque', '-81.36', 33);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-02 11:29:10', 'Saque', '-1736.43', 10);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-15 12:10:24', 'Saque', '-1274.26', 46);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-11 07:45:23', 'Saque', '-28.69', 20);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-02 23:24:57', 'Saque', '-662.66', 19);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-02 17:34:22', 'Saque', '-1883.19', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-06 04:12:48', 'Saque', '-14.14', 35);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-04 15:20:29', 'Saque', '-1208.62', 12);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-07 19:03:23', 'Saque', '-946.48', 24);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-27 01:03:59', 'Saque', '-1104.93', 20);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-25 19:57:13', 'Saque', '-249.02', 36);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-21 03:20:12', 'Saque', '-1825.64', 27);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-27 00:27:22', 'Saque', '-1963.46', 46);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-12 05:36:45', 'Saque', '-112.12', 39);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-09 06:44:28', 'Saque', '-1338.40', 19);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-10 19:48:37', 'Saque', '-439.91', 41);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-18 18:50:12', 'Saque', '-1420.36', 10);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-07 20:02:31', 'Saque', '-1156.69', 10);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-09 03:31:34', 'Saque', '-1054.04', 38);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-15 22:48:19', 'Saque', '-1306.08', 8);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-27 13:06:17', 'Saque', '-960.20', 18);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-14 21:41:17', 'Saque', '-1042.61', 23);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-01 23:41:51', 'Saque', '-972.38', 17);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-09 14:01:26', 'Saque', '-908.04', 34);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-29 17:44:45', 'Saque', '-1538.21', 3);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-23 22:59:25', 'Saque', '-482.05', 34);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-24 12:07:15', 'Saque', '-551.27', 40);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-11 11:10:06', 'Saque', '-770.05', 18);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-03 10:59:09', 'Saque', '-1134.77', 38);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-08 10:40:13', 'Saque', '-312.61', 3);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-15 21:00:41', 'Saque', '-35.85', 35);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-27 05:10:57', 'Saque', '-1413.29', 6);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-06 00:03:38', 'Saque', '-811.45', 44);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-09 15:02:16', 'Saque', '-1966.95', 18);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-12 03:17:00', 'Saque', '-1398.09', 24);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-02 04:56:04', 'Saque', '-603.78', 19);
+insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-16 16:55:04', 'Saque', '-770.02', 8);
+COMMIT TRANSACTION;
+
+
+-- TRANSACOES - TRANSFERENCIAS;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-08 20:02:14', 'Transferência Saída', -1717.83, 11); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-08-08 20:02:14', 'Transferência Entrada',1717.83,19, 101);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-10 23:12:05', 'Transferência Saída', -924.61, 19); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-04-10 23:12:05', 'Transferência Entrada',924.61,11, 103);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-01 19:37:27', 'Transferência Saída', -681.75, 11); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-01 19:37:27', 'Transferência Entrada',681.75,36, 105);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-11 19:12:53', 'Transferência Saída', -170.65, 36); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-11 19:12:53', 'Transferência Entrada',170.65,18, 107);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-26 20:55:48', 'Transferência Saída', -930.46, 18); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-02-26 20:55:48', 'Transferência Entrada',930.46,20, 109);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-12 05:18:11', 'Transferência Saída', -546.45, 20); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-08-12 05:18:11', 'Transferência Entrada',546.45,25, 111);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-07 15:52:45', 'Transferência Saída', -467.29, 25); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-02-07 15:52:45', 'Transferência Entrada',467.29,17, 113);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-24 03:22:57', 'Transferência Saída', -983.93, 17); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-12-24 03:22:57', 'Transferência Entrada',983.93,24, 115);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-08 16:40:25', 'Transferência Saída', -1352.39, 24); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-04-08 16:40:25', 'Transferência Entrada',1352.39,28, 117);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-25 10:08:48', 'Transferência Saída', -911.41, 28); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-08-25 10:08:48', 'Transferência Entrada',911.41,33, 119);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-04 13:46:47', 'Transferência Saída', -1258.98, 33); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-05-04 13:46:47', 'Transferência Entrada',1258.98,36, 121);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-05 14:45:22', 'Transferência Saída', -335.17, 36); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-05 14:45:22', 'Transferência Entrada',335.17,28, 123);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-19 00:16:28', 'Transferência Saída', -1029.98, 28); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-12-19 00:16:28', 'Transferência Entrada',1029.98,35, 125);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-05 12:34:25', 'Transferência Saída', -575.26, 35); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-05 12:34:25', 'Transferência Entrada',575.26,40, 127);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-16 05:10:26', 'Transferência Saída', -424.91, 40); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-02-16 05:10:26', 'Transferência Entrada',424.91,27, 129);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-18 14:59:50', 'Transferência Saída', -242.90, 27); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-18 14:59:50', 'Transferência Entrada',242.90,11, 131);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-16 21:15:40', 'Transferência Saída', -727.85, 11); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-01-16 21:15:40', 'Transferência Entrada',727.85,37, 133);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-12 16:36:58', 'Transferência Saída', -392.19, 37); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-08-12 16:36:58', 'Transferência Entrada',392.19,18, 135);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-21 12:30:20', 'Transferência Saída', -1864.79, 18); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-03-21 12:30:20', 'Transferência Entrada',1864.79,18, 137);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-11 12:33:05', 'Transferência Saída', -700.85, 18); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-03-11 12:33:05', 'Transferência Entrada',700.85,23, 139);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-09 00:03:28', 'Transferência Saída', -463.00, 23); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-09 00:03:28', 'Transferência Entrada',463.00,32, 141);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-07 23:49:23', 'Transferência Saída', -685.71, 32); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-07 23:49:23', 'Transferência Entrada',685.71,5, 143);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-15 16:51:54', 'Transferência Saída', -539.22, 5); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-15 16:51:54', 'Transferência Entrada',539.22,37, 145);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-08-17 12:08:55', 'Transferência Saída', -616.30, 37); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-08-17 12:08:55', 'Transferência Entrada',616.30,41, 147);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-25 06:13:08', 'Transferência Saída', -430.61, 41); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-25 06:13:08', 'Transferência Entrada',430.61,26, 149);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-16 16:49:49', 'Transferência Saída', -700.73, 26); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-07-16 16:49:49', 'Transferência Entrada',700.73,50, 151);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-29 13:02:39', 'Transferência Saída', -713.41, 50); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-29 13:02:39', 'Transferência Entrada',713.41,26, 153);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-12 13:25:32', 'Transferência Saída', -21.39, 26); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-12-12 13:25:32', 'Transferência Entrada',21.39,43, 155);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-20 05:52:32', 'Transferência Saída', -530.69, 43); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-20 05:52:32', 'Transferência Entrada',530.69,19, 157);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-11 16:36:47', 'Transferência Saída', -350.66, 19); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-11 16:36:47', 'Transferência Entrada',350.66,3, 159);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-04-25 12:42:44', 'Transferência Saída', -1864.61, 3); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-04-25 12:42:44', 'Transferência Entrada',1864.61,11, 161);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-12-26 06:57:31', 'Transferência Saída', -1180.28, 11); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-12-26 06:57:31', 'Transferência Entrada',1180.28,49, 163);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-27 03:25:36', 'Transferência Saída', -333.23, 49); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-03-27 03:25:36', 'Transferência Entrada',333.23,33, 165);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-11 21:09:06', 'Transferência Saída', -475.21, 33); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-11 21:09:06', 'Transferência Entrada',475.21,36, 167);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-16 16:31:05', 'Transferência Saída', -930.59, 36); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-05-16 16:31:05', 'Transferência Entrada',930.59,3, 169);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-08-31 01:09:59', 'Transferência Saída', -768.81, 3); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-08-31 01:09:59', 'Transferência Entrada',768.81,16, 171);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-03 12:41:57', 'Transferência Saída', -555.38, 16); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-03 12:41:57', 'Transferência Entrada',555.38,24, 173);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-12 20:56:17', 'Transferência Saída', -1015.37, 24); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-12 20:56:17', 'Transferência Entrada',1015.37,16, 175);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-03-17 09:49:25', 'Transferência Saída', -185.79, 16); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-03-17 09:49:25', 'Transferência Entrada',185.79,13, 177);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-16 01:11:01', 'Transferência Saída', -1215.43, 13); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-16 01:11:01', 'Transferência Entrada',1215.43,1, 179);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-06-20 16:17:57', 'Transferência Saída', -890.60, 1); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-06-20 16:17:57', 'Transferência Entrada',890.60,1, 181);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-09-21 16:43:25', 'Transferência Saída', -179.33, 1); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-09-21 16:43:25', 'Transferência Entrada',179.33,40, 183);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-10-07 11:07:32', 'Transferência Saída', -260.08, 40); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-10-07 11:07:32', 'Transferência Entrada',260.08,31, 185);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-05 02:42:00', 'Transferência Saída', -833.77, 31); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-01-05 02:42:00', 'Transferência Entrada',833.77,27, 187);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-02-22 23:29:04', 'Transferência Saída', -1598.69, 27); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-02-22 23:29:04', 'Transferência Entrada',1598.69,48, 189);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-07-07 17:58:49', 'Transferência Saída', -232.53, 48); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-07-07 17:58:49', 'Transferência Entrada',232.53,7, 191);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-05-10 11:32:49', 'Transferência Saída', -1493.96, 7); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-05-10 11:32:49', 'Transferência Entrada',1493.96,39, 193);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-24 07:12:28', 'Transferência Saída', -352.50, 39); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-01-24 07:12:28', 'Transferência Entrada',352.50,50, 195);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2021-11-29 13:02:39', 'Transferência Saída', -713.41, 50); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2021-11-29 13:02:39', 'Transferência Entrada',713.41,39, 197);COMMIT TRANSACTION;
+BEGIN TRANSACTION; insert into transacoes (dia_horario, tipo, valor, id_conta) values ('2022-01-24 07:12:28', 'Transferência Saída', -352.50, 39); insert into transacoes (dia_horario, tipo, valor, id_conta, operacao_origem) values ('2022-01-24 07:12:28', 'Transferência Entrada',352.50,22, 199);COMMIT TRANSACTION;
