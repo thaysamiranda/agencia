@@ -1,0 +1,64 @@
+-- 01 
+SELECT * FROM conta WHERE tipo = 'Conta Corrente';
+
+
+-- 02
+SELECT cliente.nome, cliente.cpf, cidade.descricao AS Cidade, banco.nome, agencia.numero AS Agencia, conta.numero AS Conta, conta.digito   FROM conta
+LEFT JOIN banco on conta.id_banco = banco.id
+LEFT JOIN agencia on agencia.id = conta.id_agencia
+LEFT JOIN endereco on endereco.id = agencia.id_endereco
+LEFT JOIN cidade on cidade.id = endereco.id_cidade
+LEFT JOIN cliente on conta.id_cliente = cliente.id
+WHERE cidade.descricao = 'São Paulo'
+
+
+-- 03
+SELECT * FROM transacoes 
+LEFT JOIN conta on conta.id = transacoes.id_conta
+LEFT JOIN banco on conta.id_banco = banco.id
+LEFT JOIN agencia on agencia.id = conta.id_agencia
+LEFT JOIN endereco on endereco.id = agencia.id_endereco
+LEFT JOIN cidade on cidade.id = endereco.id_cidade
+LEFT JOIN cliente on conta.id_cliente = cliente.id
+
+
+
+-- 04
+SELECT cliente.nome, cliente.cpf, banco.nome, agencia.numero AS Agencia, conta.numero AS Conta, conta.digito, count(transacoes.id) as Total_de_Transacoes FROM conta
+LEFT JOIN transacoes on conta.id = transacoes.id_conta
+LEFT JOIN banco on conta.id_banco = banco.id
+LEFT JOIN agencia on agencia.id = conta.id_agencia
+LEFT JOIN endereco on endereco.id = agencia.id_endereco
+LEFT JOIN cidade on cidade.id = endereco.id_cidade
+LEFT JOIN cliente on conta.id_cliente = cliente.id
+WHERE 
+	extract(year from transacoes.dia_horario) = 2022
+GROUP BY cliente.nome, cliente.cpf, banco.nome, agencia.numero, conta.numero, conta.digito
+ORDER BY Total_de_Transacoes
+
+-- 05.1
+CREATE VIEW conta_saldo AS
+	SELECT cliente.nome, cliente.cpf, banco.nome as Banco, agencia.numero AS Agencia, conta.numero AS Conta, conta.digito, SUM(transacoes.valor) as Saldo FROM conta
+	LEFT JOIN transacoes on conta.id = transacoes.id_conta
+	LEFT JOIN banco on conta.id_banco = banco.id
+	LEFT JOIN agencia on agencia.id = conta.id_agencia
+	LEFT JOIN endereco on endereco.id = agencia.id_endereco
+	LEFT JOIN cidade on cidade.id = endereco.id_cidade
+	LEFT JOIN cliente on conta.id_cliente = cliente.id
+	GROUP BY cliente.nome, cliente.cpf, banco.nome, agencia.numero, conta.numero, conta.digito
+-- SELECT * FROM conta_saldo
+
+-- 05.2
+CREATE VIEW historico_de_transacoes AS
+	SELECT cliente.nome, cliente.cpf, banco.nome as Banco, agencia.numero AS Agencia, conta.numero AS Conta, conta.digito, transacoes.dia_horario, transacoes.tipo, transacoes.valor FROM conta
+	LEFT JOIN transacoes on conta.id = transacoes.id_conta
+	LEFT JOIN banco on conta.id_banco = banco.id
+	LEFT JOIN agencia on agencia.id = conta.id_agencia
+	LEFT JOIN endereco on endereco.id = agencia.id_endereco
+	LEFT JOIN cidade on cidade.id = endereco.id_cidade
+	LEFT JOIN cliente on conta.id_cliente = cliente.id
+	ORDER BY transacoes.dia_horario
+-- SELECT * FROM historico_de_transacoes
+
+-- 06
+CREATE INDEX transacoes_por_data ON transacoes(dia_horario);
